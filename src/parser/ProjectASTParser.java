@@ -78,7 +78,6 @@ public class ProjectASTParser {
 	public static void parse(String project) throws IOException {
 
 		Classes.clear();
-		System.setErr(new PrintStream(new ByteArrayOutputStream()));
 
 		// Scanning process
 		JavaCompiler compiler = JavacTool.create();
@@ -93,7 +92,7 @@ public class ProjectASTParser {
 		ArrayList<JavaFileObject> units = new ArrayList<JavaFileObject>();
 		for (JavaFileObject unit : manager.getJavaFileObjects(files.toArray(new File[files.size()]))) {
 			if (unit.getKind() == Kind.SOURCE) {
-				System.out.println("Found file: "+unit.getName());
+				System.out.println("Found file: " + unit.getName());
 				units.add(unit);
 			}
 		}
@@ -106,7 +105,7 @@ public class ProjectASTParser {
 			throw e;
 		}
 
-		System.out.println("Processing "+ Classes.size()+ "Classes.");
+		System.out.println("Processing " + Classes.size() + "Classes.");
 		for (ClassObject j : Classes.values()) {
 			j.findInherits();
 			j.findUses();
@@ -141,7 +140,8 @@ public class ProjectASTParser {
 				if (!GeneralMethods.isPrimitive(aclass.getSimpleName().toString())) {
 					Create_ClassObject(aclass);
 				} else {
-					// System.out.println("Primitive type found: " + aclass.getSimpleName().toString());
+					// System.out.println("Primitive type found: " +
+					// aclass.getSimpleName().toString());
 				}
 			}
 			return super.visitClass(node, p);
@@ -182,7 +182,7 @@ public class ProjectASTParser {
 		public Boolean visitVariable(VariableTree node, Void p) {
 			Variable var = new Variable();
 			var.setName(node.getName().toString());
-			String s = node.getType().toString();
+			String s = node.getType() == null ? "Object" : node.getType().toString();
 			var.settype(s);
 			// Check for arrays and/or list of classes
 			if (s.contains("<")) {
