@@ -30,6 +30,7 @@ public class ShowWaitAction2 extends AbstractAction {
 		SwingWorker<Void, Void> mySwingWorker = new SwingWorker<Void, Void>() {
 			@Override
 			protected Void doInBackground() throws Exception {
+				System.out.println("Starting detection");
 				ProjectASTParser.parse(MainWindow.projectfolder);
 				File file = new File(MainWindow.patternfolder + File.separator + MainWindow.cb.getSelectedItem().toString()
 						+ ".pattern");
@@ -40,6 +41,7 @@ public class ShowWaitAction2 extends AbstractAction {
 				else
 					grouping = false;
 				String s = PatternDetectionAlgorithm.DetectPattern_Results(pat, grouping);
+				System.out.println(s);
 				File fileEntry = new File(MainWindow.projectfolder);
 				String s2 = MainWindow.exportfolder + File.separator + "detect_" + MainWindow.cb.getSelectedItem().toString()
 						+ "_pattern_in_" + fileEntry.getName() + "_project" + ".txt";

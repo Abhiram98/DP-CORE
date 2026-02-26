@@ -194,7 +194,7 @@ public class MainWindow extends JFrame {
 	 * 
 	 * @param args optional arguments for executing in command line mode.
 	 */
-	public static void main(String args[]) {
+	public static void main(String args[]) throws IOException {
 		if (args.length > 0) {
 			String[] arguments = parseArgs(args);
 			String project = arguments[0];
@@ -209,6 +209,7 @@ public class MainWindow extends JFrame {
 					if (arguments[2].equals("true") || arguments[2].equals("false"))
 						group = Boolean.parseBoolean(arguments[2]);
 					ProjectASTParser.parse(project);
+					System.out.println("Parsing complete");
 					Pattern pat = MainWindow.extractPattern(new File(pattern));
 					String s = PatternDetectionAlgorithm.DetectPattern_Results(pat, group);
 					System.out.println(s);
@@ -418,7 +419,7 @@ public class MainWindow extends JFrame {
 	 * @param s Input String to be written to the file
 	 * @param file Input file containing the location of the file to be created
 	 */
-	public static void createFile(String s, File file) {
+	public static void createFile(String s, File file) throws FileNotFoundException, UnsupportedEncodingException {
 		try {
 			PrintWriter writer;
 			writer = new PrintWriter(file.getAbsolutePath(), "UTF-8");
@@ -426,10 +427,10 @@ public class MainWindow extends JFrame {
 			writer.close();
 		} catch (FileNotFoundException e1) {
 			System.out.println("File Not Found");
-			e1.printStackTrace();
+			throw e1;
 		} catch (UnsupportedEncodingException e1) {
 			System.out.println("Unsupported");
-			e1.printStackTrace();
+			throw e1;
 		}
 	}
 

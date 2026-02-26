@@ -75,7 +75,7 @@ public class ProjectASTParser {
 	 * 
 	 * @param project defines the input project folder
 	 */
-	public static void parse(String project) {
+	public static void parse(String project) throws IOException {
 
 		Classes.clear();
 		System.setErr(new PrintStream(new ByteArrayOutputStream()));
@@ -92,17 +92,21 @@ public class ProjectASTParser {
 		// Files in folder
 		ArrayList<JavaFileObject> units = new ArrayList<JavaFileObject>();
 		for (JavaFileObject unit : manager.getJavaFileObjects(files.toArray(new File[files.size()]))) {
-			if (unit.getKind() == Kind.SOURCE)
+			if (unit.getKind() == Kind.SOURCE) {
+				System.out.println("Found file: "+unit.getName());
 				units.add(unit);
+			}
 		}
 		JavacTask task = (JavacTask) compiler.getTask(null, manager, diagnostics, null, null, units);
 		SignatureExtractor tscanner = new SignatureExtractor();
 		try {
 			tscanner.scan(task.parse(), null);
 		} catch (IOException e) {
-			e.printStackTrace();
+			e.printStackTrace(System.out);
+			throw e;
 		}
 
+		System.out.println("Processing "+ Classes.size()+ "Classes.");
 		for (ClassObject j : Classes.values()) {
 			j.findInherits();
 			j.findUses();
